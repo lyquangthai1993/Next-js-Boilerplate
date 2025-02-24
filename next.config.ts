@@ -19,6 +19,7 @@ export default withSentryConfig(
       poweredByHeader: false,
       reactStrictMode: true,
       serverExternalPackages: ['@electric-sql/pglite'],
+      output: 'standalone',
     }),
   ),
   {
