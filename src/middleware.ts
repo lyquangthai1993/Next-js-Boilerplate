@@ -1,6 +1,7 @@
 import type { NextFetchEvent, NextRequest } from 'next/server';
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import createMiddleware from 'next-intl/middleware';
+import { NextResponse } from 'next/server';
 import { routing } from './libs/i18nNavigation';
 
 const intlMiddleware = createMiddleware(routing);
@@ -40,6 +41,16 @@ export default function middleware(
 
       return intlMiddleware(req);
     })(request, event);
+  }
+
+  // Extract the URL pathname from the request
+  const path = request.nextUrl.pathname;
+
+  // Allow direct access to sitemap.xml and robots.txt without i18n middleware processing
+  // This ensures these files are properly served for SEO purposes
+  // Related to GitHub issue: https://github.com/ixartz/Next-js-Boilerplate/issues/356
+  if (path === '/sitemap.xml' || path === '/robots.txt') {
+    return NextResponse.next();
   }
 
   return intlMiddleware(request);
